@@ -42,6 +42,10 @@ button{
   font-size:16px;
   cursor:pointer;
 }
+.danger{
+  background:#ef4444;
+  color:#fff;
+}
 .box{
   background:#111827;
   padding:15px;
@@ -79,6 +83,8 @@ th{color:#facc15}
     <input id="winningNumbers" placeholder="당첨번호 6개 입력 예: 3,11,18,24,32,41">
     <button onclick="checkWinners()">당첨자 확인</button>
 
+    <button class="danger" onclick="resetRound()">회차 종료 및 초기화</button>
+
     <div id="summary" class="box"></div>
     <div id="notice" class="box"></div>
     <div id="tableArea"></div>
@@ -92,7 +98,9 @@ import {
   collection,
   getDocs,
   query,
-  orderBy
+  orderBy,
+  deleteDoc,
+  doc
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
 const ADMIN_PASSWORD = "qoxmf123!@";
@@ -134,8 +142,8 @@ window.loadEntries = async function(){
 
   entries = [];
 
-  snap.forEach(doc => {
-    const data = doc.data();
+  snap.forEach(docSnap => {
+    const data = docSnap.data();
     entries.push({
       nickname: data.nickname,
       numbers: data.numbers || []
@@ -227,6 +235,35 @@ window.checkWinners = function(){
 
   html += "</table>";
   document.getElementById("tableArea").innerHTML = html;
+};
+
+window.resetRound = async function(){
+  const ok = confirm("정말 이번 회차를 종료하고 모든 참여자를 삭제하시겠습니까?");
+
+  if(!ok) return;
+
+  const finalOk = confirm("삭제 후 복구할 수 없습니다. 진짜 초기화할까요?");
+  if(!finalOk) return;
+
+  const summary = document.getElementById("summary");
+  const notice = document.getElementById("notice");
+  const tableArea = document.getElementById("tableArea");
+
+  summary.innerText = "회차 종료 처리 중...";
+
+  const snap = await getDocs(collection(db, "entries"));
+
+  for(const d of snap.docs){
+    await deleteDoc(doc(db, "entries", d.id));
+  }
+
+  entries = [];
+  document.getElementById("winningNumbers").value = "";
+  summary.innerText = "총 참여자: 0명";
+  notice.innerText = "회차 종료 및 초기화 완료";
+  tableArea.innerHTML = "";
+
+  alert("회차 종료 및 초기화 완료");
 };
 </script>
 
