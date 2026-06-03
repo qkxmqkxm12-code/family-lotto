@@ -15,34 +15,51 @@ body{
   padding:18px;
   min-height:100vh;
   background:
-    radial-gradient(circle at 20% 10%, rgba(250,204,21,.35), transparent 25%),
-    radial-gradient(circle at 85% 15%, rgba(99,102,241,.32), transparent 28%),
-    radial-gradient(circle at 50% 90%, rgba(245,158,11,.22), transparent 32%),
-    linear-gradient(135deg,#020617 0%,#0f172a 45%,#111827 100%);
+    radial-gradient(circle at 18% 18%, rgba(250,204,21,.45), transparent 16%),
+    radial-gradient(circle at 82% 22%, rgba(255,255,255,.16), transparent 12%),
+    radial-gradient(circle at 70% 78%, rgba(245,158,11,.36), transparent 18%),
+    radial-gradient(circle at 25% 82%, rgba(234,179,8,.22), transparent 14%),
+    linear-gradient(135deg,#050505 0%,#111827 45%,#1f2937 100%);
   overflow-x:hidden;
 }
 
 body::before{
+  content:"07  12  21  33  41     03  18  24  32  45     LOTTO     06  11  29  38";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  color:rgba(250,204,21,.08);
+  font-size:64px;
+  font-weight:900;
+  letter-spacing:10px;
+  line-height:1.8;
+  transform:rotate(-18deg) scale(1.2);
+  white-space:pre-wrap;
+  opacity:.75;
+}
+
+body::after{
   content:"";
   position:fixed;
   inset:0;
   pointer-events:none;
   background:
-    linear-gradient(120deg, transparent 0%, rgba(255,255,255,.07) 42%, transparent 70%),
-    repeating-linear-gradient(135deg, rgba(255,255,255,.025) 0 1px, transparent 1px 18px);
-  opacity:.75;
+    radial-gradient(circle at 50% 0%, rgba(255,255,255,.08), transparent 30%),
+    linear-gradient(120deg, transparent 0%, rgba(255,255,255,.06) 45%, transparent 70%);
 }
 
 .container{
+  position:relative;
+  z-index:1;
   max-width:920px;
   margin:auto;
-  background:rgba(15,23,42,.82);
+  background:rgba(10,15,25,.86);
   padding:26px;
   border-radius:28px;
-  border:1px solid rgba(250,204,21,.25);
+  border:1px solid rgba(250,204,21,.28);
   box-shadow:
-    0 30px 90px rgba(0,0,0,.55),
-    0 0 45px rgba(250,204,21,.12),
+    0 30px 90px rgba(0,0,0,.58),
+    0 0 55px rgba(250,204,21,.15),
     inset 0 1px 0 rgba(255,255,255,.08);
   backdrop-filter:blur(20px);
 }
@@ -92,7 +109,7 @@ button:hover{
 }
 
 .box{
-  background:rgba(2,6,23,.8);
+  background:rgba(2,6,23,.82);
   padding:17px;
   border-radius:18px;
   margin-top:17px;
@@ -125,7 +142,18 @@ th{
 
 @media(max-width:520px){
   body{padding:10px}
-  .container{padding:18px;border-radius:20px}
+
+  body::before{
+    font-size:42px;
+    letter-spacing:6px;
+    transform:rotate(-18deg) scale(1.15);
+  }
+
+  .container{
+    padding:18px;
+    border-radius:20px;
+  }
+
   h1{font-size:25px}
   th,td{font-size:13px;padding:9px}
 }
