@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>관리자 로또 페이지</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,'Noto Sans KR',sans-serif;
+  background:#111827;
+  color:#fff;
+  padding:18px;
+}
+.container{
+  max-width:900px;
+  margin:auto;
+  background:#1f2937;
+  padding:22px;
+  border-radius:18px;
+}
+h1{text-align:center}
+input{
+  width:100%;
+  padding:13px;
+  border:none;
+  border-radius:10px;
+  margin:8px 0;
+  font-size:16px;
+}
+button{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:10px;
+  margin-top:10px;
+  background:#facc15;
+  color:#111827;
+  font-weight:bold;
+  font-size:16px;
+  cursor:pointer;
+}
+.box{
+  background:#111827;
+  padding:15px;
+  border-radius:12px;
+  margin-top:15px;
+  white-space:pre-wrap;
+  line-height:1.6;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:15px;
+}
+th,td{
+  border-bottom:1px solid #374151;
+  padding:10px;
+  text-align:left;
+}
+th{color:#facc15}
+.hidden{display:none}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>관리자 로또 페이지</h1>
+
+  <input type="password" id="password" placeholder="관리자 비밀번호">
+  <button onclick="login()">관리자 접속</button>
+
+  <div id="adminArea" class="hidden">
+    <button onclick="loadEntries()">참여자 불러오기</button>
+
+    <input id="winningNumbers" placeholder="당첨번호 6개 입력 예: 3,11,18,24,32,41">
+    <button onclick="checkWinners()">당첨자 확인</button>
+
+    <div id="summary" class="box"></div>
+    <div id="notice" class="box"></div>
+    <div id="tableArea"></div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  query,
+  orderBy
+} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+const ADMIN_PASSWORD = "1234";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCkRvFF3UT31Jjv8DxiDWDAp76SDkV-Mi0",
+  authDomain: "family-lotto-26dc4.firebaseapp.com",
+  projectId: "family-lotto-26dc4",
+  storageBucket: "family-lotto-26dc4.firebasestorage.app",
+  messagingSenderId: "870924884772",
+  appId: "1:870924884772:web:d1d6019fcd2f6368d3b1b1"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+let entries = [];
+
+window.login = function(){
+  const pw = document.getElementById("password").value;
+
+  if(pw !== ADMIN_PASSWORD){
+    alert("비밀번호가 틀렸습니다.");
+    return;
+  }
+
+  document.getElementById("adminArea").classList.remove("hidden");
+  alert("관리자 접속 완료");
+};
+
+window.loadEntries = async function(){
+  const tableArea = document.getElementById("tableArea");
+  const summary = document.getElementById("summary");
+
+  summary.innerText = "참여자 불러오는 중...";
+
+  const q = query(collection(db, "entries"), orderBy("createdAt", "asc"));
+  const snap = await getDocs(q);
+
+  entries = [];
+
+  snap.forEach(doc => {
+    const data = doc.data();
+    entries.push({
+      nickname: data.nickname,
+      numbers: data.numbers || []
+    });
+  });
+
+  summary.innerText = "총 참여자: " + entries.length + "명";
+
+  let html = "<table><tr><th>순번</th><th>닉네임</th><th>선택번호</th></tr>";
+
+  entries.forEach((e, i) => {
+    html += `<tr>
+      <td>${i+1}</td>
+      <td>${e.nickname}</td>
+      <td>${e.numbers.join(", ")}</td>
+    </tr>`;
+  });
+
+  html += "</table>";
+  tableArea.innerHTML = html;
+};
+
+window.checkWinners = function(){
+  if(entries.length === 0){
+    alert("먼저 참여자를 불러오세요.");
+    return;
+  }
+
+  const raw = document.getElementById("winningNumbers").value.trim();
+
+  if(!raw){
+    alert("당첨번호를 입력하세요.");
+    return;
+  }
+
+  const winning = raw.split(/[,\s]+/).map(Number).filter(Boolean).sort((a,b)=>a-b);
+  const unique = [...new Set(winning)];
+
+  if(unique.length !== 6 || unique.some(n => n < 1 || n > 45)){
+    alert("1~45번 중 중복 없이 6개 입력하세요.");
+    return;
+  }
+
+  const results = entries.map(e => {
+    const hit = e.numbers.filter(n => unique.includes(n)).length;
+
+    let prize = "꽝";
+    if(hit === 3) prize = "커피 기프티콘";
+    if(hit === 4) prize = "치킨 기프티콘";
+    if(hit === 5) prize = "배민 상품권 3만원";
+    if(hit === 6) prize = "신세계 상품권 10만원";
+
+    return {
+      nickname: e.nickname,
+      numbers: e.numbers,
+      hit,
+      prize
+    };
+  }).sort((a,b)=>b.hit-a.hit);
+
+  const winners = results.filter(r => r.hit >= 3);
+
+  let noticeText = "🎉 가족방 로또 이벤트 당첨 결과 🎉\n\n";
+  noticeText += "✅ 당첨번호: " + unique.join(", ") + "\n";
+  noticeText += "✅ 총 참여자: " + entries.length + "명\n\n";
+
+  if(winners.length === 0){
+    noticeText += "아쉽게도 이번 회차 당첨자는 없습니다.\n다음 이벤트에도 많은 참여 부탁드립니다!";
+  }else{
+    noticeText += "🏆 당첨자 명단\n";
+    winners.forEach(w => {
+      noticeText += `- ${w.nickname} / ${w.hit}개 적중 / ${w.prize}\n`;
+    });
+    noticeText += "\n당첨되신 회원님은 담당 실장에게 확인 요청 부탁드립니다.";
+  }
+
+  document.getElementById("notice").innerText = noticeText;
+
+  let html = "<table><tr><th>닉네임</th><th>선택번호</th><th>적중</th><th>상품</th></tr>";
+
+  results.forEach(r => {
+    html += `<tr>
+      <td>${r.nickname}</td>
+      <td>${r.numbers.join(", ")}</td>
+      <td>${r.hit}개</td>
+      <td>${r.prize}</td>
+    </tr>`;
+  });
+
+  html += "</table>";
+  document.getElementById("tableArea").innerHTML = html;
+};
+</script>
+
+</body>
+</html>
