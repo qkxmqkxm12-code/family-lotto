@@ -15,9 +15,11 @@ body{
   padding:18px;
   min-height:100vh;
   background:
-    radial-gradient(circle at top left, rgba(250,204,21,.18), transparent 28%),
-    radial-gradient(circle at top right, rgba(59,130,246,.16), transparent 32%),
+    radial-gradient(circle at 20% 10%, rgba(250,204,21,.35), transparent 25%),
+    radial-gradient(circle at 85% 15%, rgba(99,102,241,.32), transparent 28%),
+    radial-gradient(circle at 50% 90%, rgba(245,158,11,.22), transparent 32%),
     linear-gradient(135deg,#020617 0%,#0f172a 45%,#111827 100%);
+  overflow-x:hidden;
 }
 
 body::before{
@@ -25,27 +27,30 @@ body::before{
   position:fixed;
   inset:0;
   pointer-events:none;
-  background:linear-gradient(120deg, transparent 0%, rgba(255,255,255,.05) 45%, transparent 70%);
-  opacity:.6;
+  background:
+    linear-gradient(120deg, transparent 0%, rgba(255,255,255,.07) 42%, transparent 70%),
+    repeating-linear-gradient(135deg, rgba(255,255,255,.025) 0 1px, transparent 1px 18px);
+  opacity:.75;
 }
 
 .container{
-  max-width:640px;
+  max-width:660px;
   margin:0 auto;
   background:rgba(15,23,42,.82);
-  border:1px solid rgba(250,204,21,.18);
-  border-radius:24px;
-  padding:24px;
+  border:1px solid rgba(250,204,21,.25);
+  border-radius:28px;
+  padding:26px;
   box-shadow:
-    0 25px 80px rgba(0,0,0,.45),
-    inset 0 1px 0 rgba(255,255,255,.06);
-  backdrop-filter:blur(18px);
+    0 30px 90px rgba(0,0,0,.55),
+    0 0 45px rgba(250,204,21,.12),
+    inset 0 1px 0 rgba(255,255,255,.08);
+  backdrop-filter:blur(20px);
 }
 
 h1{
   text-align:center;
   margin:0 0 10px;
-  font-size:30px;
+  font-size:32px;
   letter-spacing:-1px;
 }
 
@@ -57,22 +62,23 @@ p{
 }
 
 .notice{
-  background:rgba(2,6,23,.72);
-  border:1px solid rgba(255,255,255,.06);
-  border-radius:18px;
-  padding:16px;
-  margin:18px 0;
-  line-height:1.7;
+  background:linear-gradient(135deg,rgba(2,6,23,.88),rgba(30,41,59,.72));
+  border:1px solid rgba(250,204,21,.2);
+  border-radius:20px;
+  padding:18px;
+  margin:20px 0;
+  line-height:1.8;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
 }
 
 input{
   width:100%;
-  padding:15px;
+  padding:16px;
   border:none;
-  border-radius:14px;
+  border-radius:16px;
   margin:12px 0;
   font-size:16px;
-  background:rgba(255,255,255,.95);
+  background:rgba(255,255,255,.96);
   color:#111827;
   outline:none;
 }
@@ -86,7 +92,7 @@ input{
 
 .number{
   background:rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.14);
   padding:13px 0;
   text-align:center;
   border-radius:999px;
@@ -98,14 +104,14 @@ input{
 
 .number:hover{
   transform:translateY(-1px);
-  background:rgba(255,255,255,.13);
+  background:rgba(255,255,255,.15);
 }
 
 .selected{
-  background:linear-gradient(135deg,#facc15,#f59e0b);
+  background:linear-gradient(135deg,#fde047,#f59e0b);
   color:#111827;
   border-color:#facc15;
-  box-shadow:0 8px 22px rgba(250,204,21,.24);
+  box-shadow:0 8px 24px rgba(250,204,21,.32);
 }
 
 .selected-box{
@@ -117,21 +123,21 @@ input{
 
 button{
   width:100%;
-  padding:16px;
+  padding:17px;
   margin-top:22px;
   border:none;
-  border-radius:16px;
-  background:linear-gradient(135deg,#facc15,#f59e0b);
+  border-radius:18px;
+  background:linear-gradient(135deg,#fde047,#f59e0b);
   color:#111827;
   font-size:18px;
   font-weight:900;
   cursor:pointer;
-  box-shadow:0 8px 22px rgba(250,204,21,.22);
+  box-shadow:0 10px 28px rgba(250,204,21,.3);
 }
 
 button:hover{
   transform:translateY(-1px);
-  filter:brightness(1.04);
+  filter:brightness(1.05);
 }
 
 button:disabled{
@@ -141,10 +147,10 @@ button:disabled{
 
 .message{
   margin-top:18px;
-  background:rgba(2,6,23,.72);
-  border:1px solid rgba(255,255,255,.06);
-  border-radius:16px;
-  padding:16px;
+  background:rgba(2,6,23,.8);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:18px;
+  padding:17px;
   white-space:pre-wrap;
   line-height:1.6;
   display:none;
@@ -158,7 +164,7 @@ button:disabled{
 
 @media(max-width:520px){
   body{padding:10px}
-  .container{padding:17px;border-radius:18px}
+  .container{padding:18px;border-radius:20px}
   h1{font-size:25px}
   .grid{gap:8px}
   .number{font-size:14px;padding:11px 0}
@@ -173,7 +179,8 @@ button:disabled{
   <p>닉네임을 입력하고 1~45번 중 원하는 번호 6개를 선택해주세요.</p>
 
   <div class="notice">
-    🎁 당첨 혜택<br>
+    🎁 당첨 혜택<br><br>
+    2개 적중 : 가족방 포인트 2만원<br>
     3개 적중 : 커피 기프티콘<br>
     4개 적중 : 치킨 기프티콘<br>
     5개 적중 : 배민 상품권 3만원<br>
