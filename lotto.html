@@ -11,196 +11,192 @@
 body{
   margin:0;
   min-height:100vh;
-  background:radial-gradient(circle at top,#243b78,#050711 75%);
+  background:linear-gradient(180deg,#eef6ff,#ffffff);
   font-family:Arial,'Noto Sans KR',sans-serif;
-  color:white;
   display:flex;
   justify-content:center;
   align-items:center;
+  color:#111;
 }
 
 .wrap{
   width:100%;
-  max-width:430px;
-  padding:18px;
+  max-width:460px;
+  padding:14px;
   text-align:center;
 }
 
 h1{
-  margin:8px 0;
+  margin:8px 0 6px;
   font-size:32px;
-  color:#ffd84d;
+  color:#1454a8;
 }
 
 .desc{
   font-size:14px;
-  color:#ddd;
+  color:#555;
   margin-bottom:10px;
 }
 
 .stage{
   position:relative;
-  height:540px;
+  width:100%;
+  height:560px;
+  background:linear-gradient(180deg,#dceeff,#ffffff);
+  border:4px solid #b8d8f5;
+  border-radius:24px;
   overflow:hidden;
+  box-shadow:0 8px 22px rgba(0,0,0,.18);
 }
 
 .machine{
   position:absolute;
-  top:18px;
   left:50%;
+  top:22px;
   transform:translateX(-50%);
-  width:320px;
-  height:320px;
-  border:9px solid #ffd84d;
-  border-radius:50%;
-  background:
-    radial-gradient(circle at 35% 25%,rgba(255,255,255,.45),transparent 17%),
-    radial-gradient(circle,rgba(255,255,255,.13),rgba(255,255,255,.04));
-  box-shadow:0 0 38px rgba(255,216,77,.4), inset 0 0 35px rgba(255,255,255,.16);
+  width:330px;
+  height:260px;
+  border:8px solid rgba(180,210,235,.9);
+  border-radius:28px;
+  background:rgba(255,255,255,.55);
+  box-shadow:inset 0 0 25px rgba(255,255,255,.9),0 4px 15px rgba(0,0,0,.15);
   overflow:hidden;
 }
 
 .machine::before{
   content:"";
   position:absolute;
-  inset:22px;
-  border-radius:50%;
-  border:2px solid rgba(255,255,255,.16);
-  z-index:2;
+  inset:18px;
+  border:3px solid rgba(140,175,205,.45);
+  border-radius:22px;
 }
 
-.miniBall{
+.machine::after{
+  content:"";
   position:absolute;
-  width:36px;
-  height:36px;
+  left:40px;
+  top:18px;
+  width:140px;
+  height:35px;
+  border-radius:50%;
+  background:rgba(255,255,255,.65);
+  filter:blur(2px);
+}
+
+.ball{
+  position:absolute;
+  width:34px;
+  height:34px;
   border-radius:50%;
   display:flex;
-  justify-content:center;
   align-items:center;
+  justify-content:center;
+  font-size:12px;
+  font-weight:900;
+  color:#111;
+  box-shadow:inset -5px -6px 8px rgba(0,0,0,.28),0 2px 5px rgba(0,0,0,.3);
+  transition:linear;
+}
+
+.exitPipe{
+  position:absolute;
+  left:292px;
+  top:118px;
+  width:145px;
+  height:44px;
+  border:7px solid rgba(150,185,215,.75);
+  border-left:none;
+  border-radius:0 30px 30px 0;
+  background:rgba(255,255,255,.35);
+  z-index:5;
+}
+
+.track{
+  position:absolute;
+  left:38px;
+  top:330px;
+  width:385px;
+  height:95px;
+  z-index:6;
+}
+
+.trackLine{
+  position:absolute;
+  left:0;
+  top:22px;
+  width:100%;
+  height:20px;
+  background:linear-gradient(180deg,#ffffff,#9fb7ca);
+  border:3px solid #8ca9be;
+  border-radius:20px;
+  transform:rotate(-6deg);
+  box-shadow:0 4px 8px rgba(0,0,0,.22);
+}
+
+.trackLine.two{
+  top:58px;
+  transform:rotate(-6deg);
+}
+
+.gate{
+  position:absolute;
+  right:23px;
+  top:145px;
+  width:35px;
+  height:85px;
+  border-radius:22px;
+  background:linear-gradient(180deg,#4a91db,#0b4f96);
+  z-index:10;
+  box-shadow:0 4px 10px rgba(0,0,0,.25);
+}
+
+.runBall{
+  position:absolute;
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   font-weight:900;
   font-size:13px;
   color:#111;
-  box-shadow:inset -5px -6px 8px rgba(0,0,0,.3),0 3px 7px rgba(0,0,0,.35);
-  transition:.055s linear;
-}
-
-.exit{
-  position:absolute;
-  top:252px;
-  left:50%;
-  transform:translateX(83px);
-  width:82px;
-  height:46px;
-  background:linear-gradient(180deg,#ffe66b,#e88e00);
-  border-radius:0 25px 25px 0;
-  z-index:6;
-  box-shadow:0 5px 14px rgba(0,0,0,.45);
-}
-
-.exit::after{
-  content:"";
-  position:absolute;
-  right:8px;
-  top:14px;
-  width:20px;
-  height:18px;
-  border-radius:50%;
-  background:#111827;
-}
-
-.rail{
-  position:absolute;
-  top:342px;
-  left:50%;
-  transform:translateX(-10px) rotate(18deg);
-  width:250px;
-  height:20px;
-  background:linear-gradient(180deg,#f5f5f5,#777);
-  border-radius:20px;
-  box-shadow:0 6px 14px rgba(0,0,0,.45);
-}
-
-.rail::before{
-  content:"";
-  position:absolute;
-  left:8px;
-  right:8px;
-  top:-11px;
-  height:5px;
-  background:rgba(255,255,255,.35);
-  border-radius:20px;
-}
-
-.dropBall{
-  position:absolute;
-  width:52px;
-  height:52px;
-  border-radius:50%;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-size:19px;
-  font-weight:900;
-  color:#111;
   z-index:30;
-  box-shadow:inset -6px -7px 9px rgba(0,0,0,.3),0 5px 14px rgba(0,0,0,.5);
-  animation:dropRail 1.55s cubic-bezier(.2,.75,.25,1) forwards;
+  box-shadow:inset -5px -6px 8px rgba(0,0,0,.3),0 4px 10px rgba(0,0,0,.35);
+  animation:rollTrack 2.15s cubic-bezier(.18,.78,.22,1) forwards;
 }
 
-@keyframes dropRail{
-  0%{
-    left:288px;
-    top:252px;
-    transform:scale(.65) rotate(0deg);
-  }
-  12%{
-    left:324px;
-    top:276px;
-    transform:scale(1) rotate(80deg);
-  }
-  28%{
-    left:337px;
-    top:318px;
-    transform:rotate(190deg);
-  }
-  45%{
-    left:305px;
-    top:354px;
-    transform:rotate(340deg);
-  }
-  63%{
-    left:250px;
-    top:383px;
-    transform:rotate(520deg);
-  }
-  82%{
-    left:170px;
-    top:415px;
-    transform:rotate(720deg);
-  }
-  100%{
-    left:86px;
-    top:440px;
-    transform:rotate(920deg);
-  }
+@keyframes rollTrack{
+  0%{left:338px;top:138px;transform:rotate(0deg) scale(.8)}
+  12%{left:360px;top:160px;transform:rotate(120deg) scale(1)}
+  22%{left:350px;top:302px;transform:rotate(240deg)}
+  38%{left:292px;top:326px;transform:rotate(420deg)}
+  52%{left:220px;top:334px;transform:rotate(620deg)}
+  66%{left:150px;top:344px;transform:rotate(830deg)}
+  82%{left:82px;top:352px;transform:rotate(1040deg)}
+  100%{left:38px;top:360px;transform:rotate(1220deg)}
 }
 
-.resultTitle{
+.panel{
   position:absolute;
-  left:0;
-  right:0;
-  bottom:82px;
-  font-size:17px;
+  left:20px;
+  right:20px;
+  bottom:25px;
+  min-height:105px;
+  background:linear-gradient(180deg,#f8fbff,#d8eaff);
+  border:3px solid #6ba8e5;
+  border-radius:20px;
+  box-shadow:inset 0 0 8px rgba(255,255,255,.9),0 4px 12px rgba(0,0,0,.18);
+  padding:10px;
+}
+
+.panelTitle{
   font-weight:900;
-  color:#ffd84d;
+  color:#1454a8;
+  margin-bottom:8px;
 }
 
 .result{
-  position:absolute;
-  left:0;
-  right:0;
-  bottom:18px;
-  min-height:58px;
   display:flex;
   justify-content:center;
   align-items:center;
@@ -209,53 +205,52 @@ h1{
 }
 
 .pick{
-  width:48px;
-  height:48px;
+  width:42px;
+  height:42px;
   border-radius:50%;
   display:flex;
-  justify-content:center;
   align-items:center;
+  justify-content:center;
   font-weight:900;
   color:#111;
-  font-size:18px;
-  box-shadow:inset -5px -6px 8px rgba(0,0,0,.26),0 4px 10px rgba(0,0,0,.4);
-  animation:pop .28s ease;
+  font-size:16px;
+  box-shadow:inset -5px -6px 8px rgba(0,0,0,.26),0 3px 8px rgba(0,0,0,.3);
+  animation:pop .25s ease;
 }
 
 @keyframes pop{
   0%{transform:scale(0)}
-  70%{transform:scale(1.15)}
+  75%{transform:scale(1.15)}
   100%{transform:scale(1)}
 }
 
-.bonusBox{
-  margin-top:10px;
-  min-height:45px;
+.bonus{
+  margin-top:8px;
   display:flex;
   justify-content:center;
   align-items:center;
-  gap:9px;
-  font-size:18px;
+  gap:8px;
   font-weight:900;
-  color:#ffd84d;
+  color:#1454a8;
 }
 
 button{
   width:100%;
+  margin-top:12px;
   padding:16px;
   border:none;
   border-radius:16px;
-  background:linear-gradient(135deg,#ffe45c,#ff8a00);
-  color:#111;
+  background:linear-gradient(135deg,#1d8cff,#0055b8);
+  color:#fff;
   font-size:21px;
   font-weight:900;
   cursor:pointer;
-  box-shadow:0 7px 0 #9b5200;
+  box-shadow:0 7px 0 #003d82;
 }
 
 button:active{
   transform:translateY(4px);
-  box-shadow:0 3px 0 #9b5200;
+  box-shadow:0 3px 0 #003d82;
 }
 
 button:disabled{
@@ -263,17 +258,19 @@ button:disabled{
 }
 
 .reset{
-  margin-top:10px;
-  background:linear-gradient(135deg,#e7e7e7,#9ca3af);
+  margin-top:9px;
+  background:linear-gradient(135deg,#e5e7eb,#9ca3af);
   box-shadow:0 7px 0 #555;
+  color:#111;
   font-size:17px;
 }
 
-.loadingText{
+.status{
+  min-height:24px;
   margin-top:8px;
-  min-height:22px;
-  color:#eee;
   font-size:14px;
+  color:#333;
+  font-weight:700;
 }
 </style>
 </head>
@@ -281,34 +278,42 @@ button:disabled{
 <body>
 
 <div class="wrap">
-  <h1>🎰 로또 추첨기</h1>
-  <div class="desc">추첨 시작 버튼을 누르면 번호가 하나씩 추첨됩니다.</div>
+  <h1>로또 추첨기</h1>
+  <div class="desc">공이 섞인 뒤 레일을 따라 하나씩 추첨됩니다.</div>
 
   <div class="stage" id="stage">
     <div class="machine" id="machine"></div>
-    <div class="exit"></div>
-    <div class="rail"></div>
-    <div class="resultTitle">당첨번호</div>
-    <div class="result" id="result"></div>
+    <div class="exitPipe"></div>
+    <div class="gate"></div>
+
+    <div class="track">
+      <div class="trackLine"></div>
+      <div class="trackLine two"></div>
+    </div>
+
+    <div class="panel">
+      <div class="panelTitle">당첨번호</div>
+      <div class="result" id="result"></div>
+      <div class="bonus" id="bonus"></div>
+    </div>
   </div>
 
   <button id="startBtn" onclick="startDraw()">추첨 시작</button>
   <button class="reset" onclick="resetDraw()">다시 추첨하기</button>
-
-  <div class="bonusBox" id="bonusBox"></div>
-  <div class="loadingText" id="loadingText"></div>
+  <div class="status" id="status"></div>
 </div>
 
 <script>
 const machine = document.getElementById("machine");
 const stage = document.getElementById("stage");
 const result = document.getElementById("result");
-const bonusBox = document.getElementById("bonusBox");
+const bonus = document.getElementById("bonus");
 const startBtn = document.getElementById("startBtn");
-const loadingText = document.getElementById("loadingText");
+const statusText = document.getElementById("status");
 
 let balls = [];
-let mixer;
+let mixer = null;
+let running = false;
 
 function ballColor(n){
   if(n <= 10) return "#fbc400";
@@ -318,117 +323,155 @@ function ballColor(n){
   return "#b0d840";
 }
 
+function wait(ms){
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 function makeBalls(){
   machine.innerHTML = "";
   balls = [];
 
   for(let i=1;i<=45;i++){
     const b = document.createElement("div");
-    b.className = "miniBall";
-    b.innerText = i;
+    b.className = "ball";
+    b.textContent = i;
+    b.dataset.num = i;
     b.style.background = ballColor(i);
     machine.appendChild(b);
-    balls.push(b);
+    balls.push({
+      el:b,
+      x:Math.random()*280+5,
+      y:Math.random()*205+10,
+      vx:(Math.random()-.5)*8,
+      vy:(Math.random()-.5)*8
+    });
   }
 
-  mixBalls();
+  renderBalls();
 }
 
-function mixBalls(){
-  balls.forEach(b=>{
-    const angle = Math.random() * Math.PI * 2;
-    const radius = Math.random() * 123;
-    const x = 142 + Math.cos(angle) * radius;
-    const y = 142 + Math.sin(angle) * radius;
-
-    b.style.left = x + "px";
-    b.style.top = y + "px";
-    b.style.transform = `rotate(${Math.random()*900}deg)`;
+function renderBalls(){
+  balls.forEach(o=>{
+    o.el.style.left = o.x + "px";
+    o.el.style.top = o.y + "px";
   });
 }
 
-function intenseMix(){
+function physicsMix(){
+  balls.forEach(o=>{
+    o.vx += (Math.random()-.5)*2.6;
+    o.vy += (Math.random()-.5)*2.6;
+
+    o.x += o.vx;
+    o.y += o.vy;
+
+    if(o.x < 5){o.x=5;o.vx*=-1}
+    if(o.x > 285){o.x=285;o.vx*=-1}
+    if(o.y < 8){o.y=8;o.vy*=-1}
+    if(o.y > 210){o.y=210;o.vy*=-1}
+
+    o.vx *= .94;
+    o.vy *= .94;
+
+    o.el.style.left = o.x + "px";
+    o.el.style.top = o.y + "px";
+    o.el.style.transform = `rotate(${Date.now()/3 % 360}deg)`;
+  });
+}
+
+function startMix(){
   clearInterval(mixer);
-  mixer = setInterval(mixBalls, 45);
+  mixer = setInterval(physicsMix, 22);
 }
 
 function stopMix(){
   clearInterval(mixer);
+  mixer = null;
 }
 
 function drawNumbers(){
-  let arr = [];
-
+  const arr = [];
   while(arr.length < 7){
-    let n = Math.floor(Math.random()*45)+1;
+    const n = Math.floor(Math.random()*45)+1;
     if(!arr.includes(n)) arr.push(n);
   }
-
   return {
     main: arr.slice(0,6).sort((a,b)=>a-b),
     bonus: arr[6]
   };
 }
 
-function wait(ms){
-  return new Promise(resolve=>setTimeout(resolve,ms));
-}
+async function rollOut(num, isBonus=false){
+  statusText.textContent = isBonus ? "보너스 번호 추첨 중..." : num + "번 공 추첨 중...";
 
-async function dropNumber(num, isBonus=false){
-  loadingText.innerText = isBonus ? "보너스 번호 추첨 중..." : num + "번 공 추첨 중...";
+  const target = balls.find(o => Number(o.el.dataset.num) === num);
+  if(target){
+    target.el.style.transition = "all .45s ease";
+    target.el.style.left = "288px";
+    target.el.style.top = "120px";
+    target.el.style.zIndex = "20";
+    await wait(450);
+    target.el.style.opacity = "0";
+  }
 
-  const d = document.createElement("div");
-  d.className = "dropBall";
-  d.innerText = num;
-  d.style.background = ballColor(num);
-  stage.appendChild(d);
+  const r = document.createElement("div");
+  r.className = "runBall";
+  r.textContent = num;
+  r.style.background = ballColor(num);
+  stage.appendChild(r);
 
-  await wait(1550);
-  d.remove();
+  await wait(2150);
+  r.remove();
 
   const p = document.createElement("div");
   p.className = "pick";
-  p.innerText = num;
+  p.textContent = num;
   p.style.background = ballColor(num);
 
   if(isBonus){
-    bonusBox.innerHTML = "<span>보너스</span>";
-    bonusBox.appendChild(p);
+    bonus.innerHTML = "<span>보너스</span>";
+    bonus.appendChild(p);
   }else{
     result.appendChild(p);
   }
 }
 
 async function startDraw(){
+  if(running) return;
+  running = true;
   startBtn.disabled = true;
   result.innerHTML = "";
-  bonusBox.innerHTML = "";
-  loadingText.innerText = "공을 섞는 중...";
+  bonus.innerHTML = "";
+  statusText.textContent = "공을 빠르게 섞는 중...";
+
+  makeBalls();
+  startMix();
 
   const picked = drawNumbers();
 
-  intenseMix();
-  await wait(1900);
+  await wait(2200);
 
   for(const n of picked.main){
-    await dropNumber(n);
+    await rollOut(n, false);
     await wait(300);
   }
 
   await wait(650);
-  await dropNumber(picked.bonus, true);
+  await rollOut(picked.bonus, true);
 
   stopMix();
-  loadingText.innerText = "추첨 완료";
+  statusText.textContent = "추첨 완료";
+  running = false;
   startBtn.disabled = false;
 }
 
 function resetDraw(){
   stopMix();
-  result.innerHTML = "";
-  bonusBox.innerHTML = "";
-  loadingText.innerText = "";
+  running = false;
   startBtn.disabled = false;
+  result.innerHTML = "";
+  bonus.innerHTML = "";
+  statusText.textContent = "";
   makeBalls();
 }
 
