@@ -3,135 +3,197 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>실시간 로또 추첨기</title>
+<title>로또 추첨기</title>
+
 <style>
 *{box-sizing:border-box}
+
 body{
   margin:0;
   min-height:100vh;
-  background:radial-gradient(circle at top,#263b75,#050711 75%);
+  background:
+    radial-gradient(circle at top,#243b78 0%,#081126 45%,#03050c 100%);
   font-family:Arial,'Noto Sans KR',sans-serif;
   color:#fff;
   display:flex;
   justify-content:center;
   align-items:center;
 }
+
 .wrap{
   width:100%;
   max-width:430px;
   padding:18px;
   text-align:center;
 }
+
 h1{
-  margin:8px 0 4px;
-  font-size:28px;
+  margin:8px 0 6px;
+  font-size:32px;
   color:#ffd84d;
+  text-shadow:0 3px 10px rgba(0,0,0,.5);
 }
-.desc{font-size:14px;color:#ddd;margin-bottom:14px}
+
+.desc{
+  font-size:14px;
+  color:#ddd;
+  margin-bottom:10px;
+}
 
 .stage{
   position:relative;
-  height:520px;
+  height:535px;
   overflow:hidden;
 }
 
 .machine{
   position:absolute;
-  top:20px;
+  top:18px;
   left:50%;
   transform:translateX(-50%);
-  width:310px;
-  height:310px;
-  border:8px solid #ffd84d;
+  width:320px;
+  height:320px;
+  border:9px solid #ffd84d;
   border-radius:50%;
   background:
-    radial-gradient(circle at 35% 25%,rgba(255,255,255,.35),transparent 18%),
-    radial-gradient(circle,rgba(255,255,255,.14),rgba(255,255,255,.04));
-  box-shadow:0 0 35px rgba(255,216,77,.35), inset 0 0 30px rgba(255,255,255,.12);
+    radial-gradient(circle at 35% 25%,rgba(255,255,255,.45),transparent 17%),
+    radial-gradient(circle at center,rgba(255,255,255,.13),rgba(255,255,255,.04));
+  box-shadow:
+    0 0 38px rgba(255,216,77,.4),
+    inset 0 0 35px rgba(255,255,255,.16);
   overflow:hidden;
 }
 
-.machine:after{
+.machine::before{
   content:"";
   position:absolute;
-  inset:20px;
+  inset:22px;
   border-radius:50%;
   border:2px solid rgba(255,255,255,.16);
+  z-index:2;
+}
+
+.machine::after{
+  content:"";
+  position:absolute;
+  width:120px;
+  height:120px;
+  top:35px;
+  left:55px;
+  border-radius:50%;
+  background:rgba(255,255,255,.13);
+  filter:blur(2px);
 }
 
 .miniBall{
   position:absolute;
-  width:34px;
-  height:34px;
+  width:36px;
+  height:36px;
   border-radius:50%;
   display:flex;
-  align-items:center;
   justify-content:center;
+  align-items:center;
   font-weight:900;
   font-size:13px;
   color:#111;
-  box-shadow:inset -4px -5px 7px rgba(0,0,0,.28), 0 2px 5px rgba(0,0,0,.35);
-  transition:.08s linear;
+  box-shadow:
+    inset -5px -6px 8px rgba(0,0,0,.3),
+    0 3px 7px rgba(0,0,0,.35);
+  transition:.055s linear;
 }
 
 .exit{
   position:absolute;
-  top:250px;
+  top:252px;
   left:50%;
-  transform:translateX(82px);
-  width:72px;
-  height:44px;
-  background:linear-gradient(180deg,#ffd84d,#e58b00);
-  border-radius:0 24px 24px 0;
-  z-index:5;
-  box-shadow:0 4px 14px rgba(0,0,0,.35);
+  transform:translateX(83px);
+  width:82px;
+  height:46px;
+  background:linear-gradient(180deg,#ffe66b,#e88e00);
+  border-radius:0 25px 25px 0;
+  z-index:6;
+  box-shadow:0 5px 14px rgba(0,0,0,.45);
+}
+
+.exit::after{
+  content:"";
+  position:absolute;
+  right:8px;
+  top:14px;
+  width:20px;
+  height:18px;
+  border-radius:50%;
+  background:#111827;
 }
 
 .rail{
   position:absolute;
-  top:325px;
+  top:337px;
   left:50%;
-  transform:translateX(-5px) rotate(23deg);
-  width:230px;
-  height:18px;
-  background:linear-gradient(180deg,#ddd,#888);
+  transform:translateX(-8px) rotate(23deg);
+  width:240px;
+  height:19px;
+  background:linear-gradient(180deg,#eee,#777);
   border-radius:20px;
-  box-shadow:0 5px 12px rgba(0,0,0,.4);
+  box-shadow:0 6px 14px rgba(0,0,0,.45);
+}
+
+.rail::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  top:-10px;
+  height:4px;
+  background:rgba(255,255,255,.35);
+  border-radius:10px;
 }
 
 .dropBall{
   position:absolute;
-  width:48px;
-  height:48px;
+  width:52px;
+  height:52px;
   border-radius:50%;
   display:flex;
   justify-content:center;
   align-items:center;
-  font-size:18px;
+  font-size:19px;
   font-weight:900;
   color:#111;
-  z-index:20;
-  box-shadow:inset -5px -6px 8px rgba(0,0,0,.28),0 4px 12px rgba(0,0,0,.45);
+  z-index:30;
+  box-shadow:
+    inset -6px -7px 9px rgba(0,0,0,.3),
+    0 5px 14px rgba(0,0,0,.5);
   animation:dropRail 1.15s ease-in-out forwards;
 }
 
 @keyframes dropRail{
-  0%{left:285px;top:248px;transform:scale(.7) rotate(0deg)}
-  25%{left:315px;top:292px;transform:scale(1) rotate(140deg)}
-  60%{left:245px;top:365px;transform:rotate(420deg)}
-  100%{left:65px;top:430px;transform:rotate(720deg)}
+  0%{left:287px;top:249px;transform:scale(.65) rotate(0deg)}
+  25%{left:320px;top:295px;transform:scale(1) rotate(160deg)}
+  60%{left:255px;top:372px;transform:rotate(460deg)}
+  100%{left:63px;top:438px;transform:rotate(760deg)}
+}
+
+.resultTitle{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:82px;
+  font-size:17px;
+  font-weight:900;
+  color:#ffd84d;
 }
 
 .result{
   position:absolute;
   left:0;
   right:0;
-  bottom:0;
-  min-height:72px;
+  bottom:18px;
+  min-height:58px;
   display:flex;
   justify-content:center;
   align-items:center;
-  gap:8px;
+  gap:7px;
   flex-wrap:wrap;
 }
 
@@ -145,69 +207,101 @@ h1{
   font-weight:900;
   color:#111;
   font-size:18px;
-  box-shadow:inset -5px -6px 8px rgba(0,0,0,.25),0 3px 8px rgba(0,0,0,.35);
-  animation:pop .25s ease;
+  box-shadow:
+    inset -5px -6px 8px rgba(0,0,0,.26),
+    0 4px 10px rgba(0,0,0,.4);
+  animation:pop .28s ease;
 }
 
 @keyframes pop{
-  from{transform:scale(0)}
-  to{transform:scale(1)}
+  0%{transform:scale(0)}
+  70%{transform:scale(1.15)}
+  100%{transform:scale(1)}
 }
 
-.bonusText{
-  margin-top:14px;
-  font-size:17px;
-  font-weight:bold;
+.bonusBox{
+  margin-top:10px;
+  min-height:45px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:9px;
+  font-size:18px;
+  font-weight:900;
   color:#ffd84d;
-  min-height:32px;
 }
 
 button{
   width:100%;
   padding:16px;
   border:none;
-  border-radius:15px;
+  border-radius:16px;
   background:linear-gradient(135deg,#ffe45c,#ff8a00);
   color:#111;
-  font-size:20px;
+  font-size:21px;
   font-weight:900;
   cursor:pointer;
-  box-shadow:0 7px 0 #9d5200;
+  box-shadow:0 7px 0 #9b5200;
 }
-button:active{transform:translateY(4px);box-shadow:0 3px 0 #9d5200}
-button:disabled{opacity:.55}
 
-.notice{
-  margin-top:14px;
-  font-size:12px;
-  color:#bbb;
+button:active{
+  transform:translateY(4px);
+  box-shadow:0 3px 0 #9b5200;
+}
+
+button:disabled{
+  opacity:.55;
+  cursor:not-allowed;
+}
+
+.reset{
+  margin-top:10px;
+  background:linear-gradient(135deg,#e7e7e7,#9ca3af);
+  box-shadow:0 7px 0 #555;
+  font-size:17px;
+}
+
+.reset:active{
+  box-shadow:0 3px 0 #555;
+}
+
+.loadingText{
+  margin-top:8px;
+  min-height:22px;
+  color:#eee;
+  font-size:14px;
 }
 </style>
 </head>
+
 <body>
 
 <div class="wrap">
-  <h1>🎰 실시간 로또 추첨</h1>
-  <div class="desc">공들이 섞인 뒤 하나씩 레일을 타고 추첨됩니다.</div>
+  <h1>🎰 로또 추첨기</h1>
+  <div class="desc">추첨 시작 버튼을 누르면 번호가 하나씩 추첨됩니다.</div>
 
   <div class="stage" id="stage">
     <div class="machine" id="machine"></div>
     <div class="exit"></div>
     <div class="rail"></div>
+    <div class="resultTitle" id="resultTitle">당첨번호</div>
     <div class="result" id="result"></div>
   </div>
 
   <button id="startBtn" onclick="startDraw()">추첨 시작</button>
-  <div class="bonusText" id="bonusText"></div>
-  <div class="notice">※ 본 페이지는 이벤트용 가상 추첨 페이지입니다.</div>
+  <button class="reset" onclick="resetDraw()">다시 추첨하기</button>
+
+  <div class="bonusBox" id="bonusBox"></div>
+  <div class="loadingText" id="loadingText"></div>
 </div>
 
 <script>
 const machine = document.getElementById("machine");
 const stage = document.getElementById("stage");
 const result = document.getElementById("result");
-const bonusText = document.getElementById("bonusText");
+const bonusBox = document.getElementById("bonusBox");
 const startBtn = document.getElementById("startBtn");
+const loadingText = document.getElementById("loadingText");
 
 let balls = [];
 let mixer;
@@ -223,6 +317,7 @@ function ballColor(n){
 function makeBalls(){
   machine.innerHTML = "";
   balls = [];
+
   for(let i=1;i<=45;i++){
     const b = document.createElement("div");
     b.className = "miniBall";
@@ -231,24 +326,26 @@ function makeBalls(){
     machine.appendChild(b);
     balls.push(b);
   }
+
   mixBalls();
 }
 
 function mixBalls(){
   balls.forEach(b=>{
     const angle = Math.random() * Math.PI * 2;
-    const radius = Math.random() * 120;
-    const x = 138 + Math.cos(angle) * radius;
-    const y = 138 + Math.sin(angle) * radius;
+    const radius = Math.random() * 123;
+    const x = 142 + Math.cos(angle) * radius;
+    const y = 142 + Math.sin(angle) * radius;
+
     b.style.left = x + "px";
     b.style.top = y + "px";
-    b.style.transform = `rotate(${Math.random()*720}deg)`;
+    b.style.transform = `rotate(${Math.random()*900}deg)`;
   });
 }
 
 function intenseMix(){
   clearInterval(mixer);
-  mixer = setInterval(mixBalls, 70);
+  mixer = setInterval(mixBalls, 48);
 }
 
 function stopMix(){
@@ -257,10 +354,12 @@ function stopMix(){
 
 function drawNumbers(){
   let arr = [];
+
   while(arr.length < 7){
     let n = Math.floor(Math.random()*45)+1;
     if(!arr.includes(n)) arr.push(n);
   }
+
   return {
     main: arr.slice(0,6).sort((a,b)=>a-b),
     bonus: arr[6]
@@ -272,6 +371,8 @@ function wait(ms){
 }
 
 async function dropNumber(num, isBonus=false){
+  loadingText.innerText = isBonus ? "보너스 번호 추첨 중..." : num + "번 공 추첨 중...";
+
   const d = document.createElement("div");
   d.className = "dropBall";
   d.innerText = num;
@@ -287,8 +388,8 @@ async function dropNumber(num, isBonus=false){
   p.style.background = ballColor(num);
 
   if(isBonus){
-    bonusText.innerHTML = "보너스 번호 ";
-    bonusText.appendChild(p);
+    bonusBox.innerHTML = "<span>보너스</span>";
+    bonusBox.appendChild(p);
   }else{
     result.appendChild(p);
   }
@@ -297,12 +398,13 @@ async function dropNumber(num, isBonus=false){
 async function startDraw(){
   startBtn.disabled = true;
   result.innerHTML = "";
-  bonusText.innerHTML = "";
+  bonusBox.innerHTML = "";
+  loadingText.innerText = "공을 섞는 중...";
 
   const picked = drawNumbers();
 
   intenseMix();
-  await wait(1800);
+  await wait(1900);
 
   for(const n of picked.main){
     await dropNumber(n);
@@ -313,8 +415,17 @@ async function startDraw(){
   await dropNumber(picked.bonus, true);
 
   stopMix();
-  makeBalls();
+  loadingText.innerText = "추첨 완료";
   startBtn.disabled = false;
+}
+
+function resetDraw(){
+  stopMix();
+  result.innerHTML = "";
+  bonusBox.innerHTML = "";
+  loadingText.innerText = "";
+  startBtn.disabled = false;
+  makeBalls();
 }
 
 makeBalls();
