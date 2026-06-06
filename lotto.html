@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>가상 로또 추첨기</title>
+<title>실시간 로또 추첨기</title>
 <style>
 *{box-sizing:border-box}
 body{
   margin:0;
   min-height:100vh;
-  background:radial-gradient(circle at top,#1b2a4a,#050711 70%);
+  background:radial-gradient(circle at top,#263b75,#050711 75%);
   font-family:Arial,'Noto Sans KR',sans-serif;
   color:#fff;
   display:flex;
@@ -19,52 +19,122 @@ body{
 .wrap{
   width:100%;
   max-width:430px;
-  padding:20px;
+  padding:18px;
   text-align:center;
 }
 h1{
-  margin:10px 0;
-  font-size:30px;
-  color:#ffd54a;
+  margin:8px 0 4px;
+  font-size:28px;
+  color:#ffd84d;
 }
-.machine{
+.desc{font-size:14px;color:#ddd;margin-bottom:14px}
+
+.stage{
   position:relative;
-  margin:25px auto;
+  height:520px;
+  overflow:hidden;
+}
+
+.machine{
+  position:absolute;
+  top:20px;
+  left:50%;
+  transform:translateX(-50%);
   width:310px;
   height:310px;
-  border:8px solid #ffd54a;
+  border:8px solid #ffd84d;
   border-radius:50%;
-  background:rgba(255,255,255,.08);
+  background:
+    radial-gradient(circle at 35% 25%,rgba(255,255,255,.35),transparent 18%),
+    radial-gradient(circle,rgba(255,255,255,.14),rgba(255,255,255,.04));
+  box-shadow:0 0 35px rgba(255,216,77,.35), inset 0 0 30px rgba(255,255,255,.12);
   overflow:hidden;
-  box-shadow:0 0 35px rgba(255,213,74,.4);
 }
-.ball{
+
+.machine:after{
+  content:"";
   position:absolute;
-  width:38px;
-  height:38px;
+  inset:20px;
+  border-radius:50%;
+  border:2px solid rgba(255,255,255,.16);
+}
+
+.miniBall{
+  position:absolute;
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:900;
+  font-size:13px;
+  color:#111;
+  box-shadow:inset -4px -5px 7px rgba(0,0,0,.28), 0 2px 5px rgba(0,0,0,.35);
+  transition:.08s linear;
+}
+
+.exit{
+  position:absolute;
+  top:250px;
+  left:50%;
+  transform:translateX(82px);
+  width:72px;
+  height:44px;
+  background:linear-gradient(180deg,#ffd84d,#e58b00);
+  border-radius:0 24px 24px 0;
+  z-index:5;
+  box-shadow:0 4px 14px rgba(0,0,0,.35);
+}
+
+.rail{
+  position:absolute;
+  top:325px;
+  left:50%;
+  transform:translateX(-5px) rotate(23deg);
+  width:230px;
+  height:18px;
+  background:linear-gradient(180deg,#ddd,#888);
+  border-radius:20px;
+  box-shadow:0 5px 12px rgba(0,0,0,.4);
+}
+
+.dropBall{
+  position:absolute;
+  width:48px;
+  height:48px;
   border-radius:50%;
   display:flex;
   justify-content:center;
   align-items:center;
-  font-weight:bold;
+  font-size:18px;
+  font-weight:900;
   color:#111;
-  box-shadow:inset -4px -5px 8px rgba(0,0,0,.25);
+  z-index:20;
+  box-shadow:inset -5px -6px 8px rgba(0,0,0,.28),0 4px 12px rgba(0,0,0,.45);
+  animation:dropRail 1.15s ease-in-out forwards;
 }
-.spin .ball{
-  animation:shake .35s infinite alternate;
+
+@keyframes dropRail{
+  0%{left:285px;top:248px;transform:scale(.7) rotate(0deg)}
+  25%{left:315px;top:292px;transform:scale(1) rotate(140deg)}
+  60%{left:245px;top:365px;transform:rotate(420deg)}
+  100%{left:65px;top:430px;transform:rotate(720deg)}
 }
-@keyframes shake{
-  from{transform:translate(-8px,6px) rotate(0deg)}
-  to{transform:translate(10px,-8px) rotate(360deg)}
-}
+
 .result{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  min-height:72px;
   display:flex;
   justify-content:center;
+  align-items:center;
   gap:8px;
   flex-wrap:wrap;
-  min-height:60px;
-  margin-top:20px;
 }
+
 .pick{
   width:48px;
   height:48px;
@@ -72,125 +142,182 @@ h1{
   display:flex;
   justify-content:center;
   align-items:center;
-  font-weight:bold;
-  font-size:18px;
+  font-weight:900;
   color:#111;
-  animation:pop .35s ease;
-}
-.bonusBox{
-  margin-top:15px;
   font-size:18px;
+  box-shadow:inset -5px -6px 8px rgba(0,0,0,.25),0 3px 8px rgba(0,0,0,.35);
+  animation:pop .25s ease;
 }
+
 @keyframes pop{
   from{transform:scale(0)}
   to{transform:scale(1)}
 }
+
+.bonusText{
+  margin-top:14px;
+  font-size:17px;
+  font-weight:bold;
+  color:#ffd84d;
+  min-height:32px;
+}
+
 button{
   width:100%;
   padding:16px;
   border:none;
-  border-radius:14px;
-  background:linear-gradient(135deg,#ffd54a,#ff8c00);
+  border-radius:15px;
+  background:linear-gradient(135deg,#ffe45c,#ff8a00);
+  color:#111;
   font-size:20px;
-  font-weight:bold;
+  font-weight:900;
   cursor:pointer;
+  box-shadow:0 7px 0 #9d5200;
 }
-button:disabled{
-  opacity:.6;
-}
+button:active{transform:translateY(4px);box-shadow:0 3px 0 #9d5200}
+button:disabled{opacity:.55}
+
 .notice{
-  margin-top:15px;
-  font-size:13px;
-  color:#ccc;
+  margin-top:14px;
+  font-size:12px;
+  color:#bbb;
 }
 </style>
 </head>
 <body>
 
 <div class="wrap">
-  <h1>🎰 가상 로또 추첨기</h1>
-  <p>START 버튼을 누르면 로또 번호가 추첨됩니다.</p>
+  <h1>🎰 실시간 로또 추첨</h1>
+  <div class="desc">공들이 섞인 뒤 하나씩 레일을 타고 추첨됩니다.</div>
 
-  <div class="machine" id="machine"></div>
+  <div class="stage" id="stage">
+    <div class="machine" id="machine"></div>
+    <div class="exit"></div>
+    <div class="rail"></div>
+    <div class="result" id="result"></div>
+  </div>
 
-  <button id="startBtn" onclick="startLotto()">추첨 시작</button>
-
-  <div class="result" id="result"></div>
-  <div class="bonusBox" id="bonus"></div>
-
+  <button id="startBtn" onclick="startDraw()">추첨 시작</button>
+  <div class="bonusText" id="bonusText"></div>
   <div class="notice">※ 본 페이지는 이벤트용 가상 추첨 페이지입니다.</div>
 </div>
 
 <script>
 const machine = document.getElementById("machine");
+const stage = document.getElementById("stage");
 const result = document.getElementById("result");
-const bonus = document.getElementById("bonus");
+const bonusText = document.getElementById("bonusText");
 const startBtn = document.getElementById("startBtn");
 
-function ballColor(num){
-  if(num <= 10) return "#fbc400";
-  if(num <= 20) return "#69c8f2";
-  if(num <= 30) return "#ff7272";
-  if(num <= 40) return "#aaa";
+let balls = [];
+let mixer;
+
+function ballColor(n){
+  if(n <= 10) return "#fbc400";
+  if(n <= 20) return "#69c8f2";
+  if(n <= 30) return "#ff7272";
+  if(n <= 40) return "#aaa";
   return "#b0d840";
 }
 
-function createBalls(){
+function makeBalls(){
   machine.innerHTML = "";
-  for(let i=1; i<=45; i++){
+  balls = [];
+  for(let i=1;i<=45;i++){
     const b = document.createElement("div");
-    b.className = "ball";
+    b.className = "miniBall";
     b.innerText = i;
     b.style.background = ballColor(i);
-    b.style.left = Math.random() * 250 + "px";
-    b.style.top = Math.random() * 250 + "px";
-    b.style.animationDelay = Math.random() + "s";
     machine.appendChild(b);
+    balls.push(b);
   }
+  mixBalls();
+}
+
+function mixBalls(){
+  balls.forEach(b=>{
+    const angle = Math.random() * Math.PI * 2;
+    const radius = Math.random() * 120;
+    const x = 138 + Math.cos(angle) * radius;
+    const y = 138 + Math.sin(angle) * radius;
+    b.style.left = x + "px";
+    b.style.top = y + "px";
+    b.style.transform = `rotate(${Math.random()*720}deg)`;
+  });
+}
+
+function intenseMix(){
+  clearInterval(mixer);
+  mixer = setInterval(mixBalls, 70);
+}
+
+function stopMix(){
+  clearInterval(mixer);
 }
 
 function drawNumbers(){
-  let nums = [];
-  while(nums.length < 7){
-    let n = Math.floor(Math.random() * 45) + 1;
-    if(!nums.includes(n)) nums.push(n);
+  let arr = [];
+  while(arr.length < 7){
+    let n = Math.floor(Math.random()*45)+1;
+    if(!arr.includes(n)) arr.push(n);
   }
   return {
-    main: nums.slice(0,6).sort((a,b)=>a-b),
-    bonus: nums[6]
+    main: arr.slice(0,6).sort((a,b)=>a-b),
+    bonus: arr[6]
   };
 }
 
-function showBall(num, target){
-  const div = document.createElement("div");
-  div.className = "pick";
-  div.innerText = num;
-  div.style.background = ballColor(num);
-  target.appendChild(div);
+function wait(ms){
+  return new Promise(resolve=>setTimeout(resolve,ms));
 }
 
-async function startLotto(){
+async function dropNumber(num, isBonus=false){
+  const d = document.createElement("div");
+  d.className = "dropBall";
+  d.innerText = num;
+  d.style.background = ballColor(num);
+  stage.appendChild(d);
+
+  await wait(1150);
+  d.remove();
+
+  const p = document.createElement("div");
+  p.className = "pick";
+  p.innerText = num;
+  p.style.background = ballColor(num);
+
+  if(isBonus){
+    bonusText.innerHTML = "보너스 번호 ";
+    bonusText.appendChild(p);
+  }else{
+    result.appendChild(p);
+  }
+}
+
+async function startDraw(){
   startBtn.disabled = true;
   result.innerHTML = "";
-  bonus.innerHTML = "";
-  machine.classList.add("spin");
+  bonusText.innerHTML = "";
 
   const picked = drawNumbers();
 
-  for(let i=0; i<picked.main.length; i++){
-    await new Promise(r => setTimeout(r, 900));
-    showBall(picked.main[i], result);
+  intenseMix();
+  await wait(1800);
+
+  for(const n of picked.main){
+    await dropNumber(n);
+    await wait(350);
   }
 
-  await new Promise(r => setTimeout(r, 900));
-  bonus.innerHTML = "보너스 번호 ";
-  showBall(picked.bonus, bonus);
+  await wait(700);
+  await dropNumber(picked.bonus, true);
 
-  machine.classList.remove("spin");
+  stopMix();
+  makeBalls();
   startBtn.disabled = false;
 }
 
-createBalls();
+makeBalls();
 </script>
 
 </body>
