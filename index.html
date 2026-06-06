@@ -64,6 +64,26 @@ body::after{
   backdrop-filter:blur(20px);
 }
 
+.logo-balls{
+  display:flex;
+  justify-content:center;
+  gap:8px;
+  margin-bottom:14px;
+}
+
+.logo-ball{
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#111827;
+  font-weight:900;
+  font-size:14px;
+  box-shadow:inset -5px -6px 8px rgba(0,0,0,.28),0 5px 14px rgba(0,0,0,.3);
+}
+
 h1{
   text-align:center;
   margin:0 0 10px;
@@ -76,6 +96,17 @@ p{
   line-height:1.5;
   text-align:center;
   margin-top:0;
+}
+
+.counter{
+  margin:16px 0;
+  padding:14px;
+  border-radius:18px;
+  background:linear-gradient(135deg,rgba(250,204,21,.18),rgba(245,158,11,.08));
+  border:1px solid rgba(250,204,21,.32);
+  text-align:center;
+  font-weight:900;
+  color:#fde047;
 }
 
 .notice{
@@ -108,8 +139,6 @@ input{
 }
 
 .number{
-  background:rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.14);
   padding:13px 0;
   text-align:center;
   border-radius:999px;
@@ -117,18 +146,25 @@ input{
   font-weight:900;
   user-select:none;
   transition:.15s;
+  color:#111827;
+  box-shadow:inset -4px -5px 7px rgba(0,0,0,.22),0 4px 10px rgba(0,0,0,.18);
+  border:2px solid rgba(255,255,255,.28);
 }
 
 .number:hover{
-  transform:translateY(-1px);
-  background:rgba(255,255,255,.15);
+  transform:translateY(-1px) scale(1.03);
 }
 
+.yellow{background:#fbc400}
+.blue{background:#69c8f2}
+.red{background:#ff7272}
+.gray{background:#b7b7b7}
+.green{background:#b0d840}
+
 .selected{
-  background:linear-gradient(135deg,#fde047,#f59e0b);
-  color:#111827;
-  border-color:#facc15;
-  box-shadow:0 8px 24px rgba(250,204,21,.32);
+  outline:4px solid #fff;
+  transform:scale(1.08);
+  box-shadow:0 0 0 4px rgba(250,204,21,.45),0 10px 26px rgba(250,204,21,.35);
 }
 
 .selected-box{
@@ -173,6 +209,35 @@ button:disabled{
   display:none;
 }
 
+.success{
+  animation:successPop .65s ease;
+  border-color:rgba(34,197,94,.6);
+  box-shadow:0 0 25px rgba(34,197,94,.25);
+}
+
+@keyframes successPop{
+  0%{transform:scale(.92);opacity:.4}
+  55%{transform:scale(1.04);opacity:1}
+  100%{transform:scale(1)}
+}
+
+.confetti{
+  position:fixed;
+  top:-20px;
+  width:10px;
+  height:16px;
+  background:#facc15;
+  z-index:999;
+  animation:fall 1.8s linear forwards;
+}
+
+@keyframes fall{
+  to{
+    transform:translateY(110vh) rotate(720deg);
+    opacity:0;
+  }
+}
+
 .small{
   font-size:13px;
   color:#cbd5e1;
@@ -202,18 +267,28 @@ button:disabled{
 
 <body>
 
-<div class="container">
+<div class="container" id="container">
+  <div class="logo-balls">
+    <div class="logo-ball yellow">7</div>
+    <div class="logo-ball blue">12</div>
+    <div class="logo-ball red">21</div>
+    <div class="logo-ball gray">33</div>
+    <div class="logo-ball green">45</div>
+  </div>
+
   <h1>🎉 가족방 로또 이벤트</h1>
   <p>닉네임을 입력하고 1~45번 중 원하는 번호 6개를 선택해주세요.</p>
 
- <div class="notice">
-  🎁 당첨 혜택<br><br>
-  2개 적중 : 가족방 포인트 1만원<br>
-  3개 적중 : 커피 기프티콘<br>
-  4개 적중 : 치킨 기프티콘<br>
-  5개 적중 : 배민 상품권 3만원<br>
-  6개 적중 : 신세계 상품권 10만원
-</div>
+  <div class="counter" id="counter">남은 참여자 수 확인 중...</div>
+
+  <div class="notice">
+    🎁 당첨 혜택<br><br>
+    2개 적중 : 가족방 포인트 1만원<br>
+    3개 적중 : 커피 기프티콘<br>
+    4개 적중 : 치킨 기프티콘<br>
+    5개 적중 : 배민 상품권 3만원<br>
+    6개 적중 : 신세계 상품권 10만원
+  </div>
 
   <input type="text" id="nickname" placeholder="닉네임 입력">
 
@@ -222,7 +297,7 @@ button:disabled{
 
   <div class="grid" id="numbers"></div>
 
-  <button onclick="submitLotto()">참여하기</button>
+  <button id="submitBtn" onclick="submitLotto()">참여하기</button>
 
   <div class="message" id="message"></div>
 </div>
@@ -248,6 +323,8 @@ const firebaseConfig = {
   appId: "1:870924884772:web:d1d6019fcd2f6368d3b1b1"
 };
 
+const MAX_PARTICIPANTS = 100;
+
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
@@ -255,10 +332,38 @@ let selected = [];
 const grid = document.getElementById("numbers");
 const selectedText = document.getElementById("selectedText");
 const message = document.getElementById("message");
+const counter = document.getElementById("counter");
+const submitBtn = document.getElementById("submitBtn");
+const container = document.getElementById("container");
+
+function numberClass(num){
+  if(num <= 10) return "yellow";
+  if(num <= 20) return "blue";
+  if(num <= 30) return "red";
+  if(num <= 40) return "gray";
+  return "green";
+}
+
+async function updateCounter(){
+  try{
+    const snap = await getDocs(collection(db, "entries"));
+    const joined = snap.size;
+    const remain = Math.max(MAX_PARTICIPANTS - joined, 0);
+
+    counter.innerText = "남은 참여자 수 : " + remain + "명 / 총 " + MAX_PARTICIPANTS + "명";
+
+    if(remain <= 0){
+      submitBtn.disabled = true;
+      submitBtn.innerText = "참여 마감";
+    }
+  }catch(error){
+    counter.innerText = "남은 참여자 수를 불러오는 중 오류가 발생했습니다.";
+  }
+}
 
 for(let i=1; i<=45; i++){
   const div = document.createElement("div");
-  div.className = "number";
+  div.className = "number " + numberClass(i);
   div.innerText = i;
 
   div.onclick = () => {
@@ -297,11 +402,19 @@ window.submitLotto = async function(){
   try{
     showMessage("참여 정보를 저장하는 중입니다...");
 
+    const allSnap = await getDocs(collection(db, "entries"));
+    if(allSnap.size >= MAX_PARTICIPANTS){
+      showMessage("참여 인원이 마감되었습니다.");
+      submitBtn.disabled = true;
+      submitBtn.innerText = "참여 마감";
+      return;
+    }
+
     const q = query(collection(db, "entries"), where("nickname", "==", nickname));
     const snap = await getDocs(q);
 
     if(!snap.empty){
-      showMessage("이미 참여한 닉네임입니다.\n1인 1회만 참여 가능합니다.");
+      showMessage("이미 참여한 닉네임입니다.\\n1인 1회만 참여 가능합니다.");
       return;
     }
 
@@ -312,18 +425,21 @@ window.submitLotto = async function(){
     });
 
     showMessage(
-      "참여 완료!\n\n" +
-      "닉네임: " + nickname + "\n" +
-      "선택번호: " + selected.join(", ") + "\n\n" +
+      "🎉 참여 완료!\\n\\n" +
+      "닉네임: " + nickname + "\\n" +
+      "선택번호: " + selected.join(", ") + "\\n\\n" +
       "추첨 결과는 가족방 공지를 통해 확인해주세요."
     );
 
-    document.querySelector("button").disabled = true;
-    document.querySelector("button").innerText = "참여 완료";
+    successEffect();
+    await updateCounter();
+
+    submitBtn.disabled = true;
+    submitBtn.innerText = "참여 완료";
 
   }catch(error){
     console.error(error);
-    showMessage("오류가 발생했습니다.\n잠시 후 다시 시도해주세요.");
+    showMessage("오류가 발생했습니다.\\n잠시 후 다시 시도해주세요.");
   }
 }
 
@@ -331,6 +447,23 @@ function showMessage(text){
   message.style.display = "block";
   message.innerText = text;
 }
+
+function successEffect(){
+  container.classList.add("success");
+  setTimeout(()=>container.classList.remove("success"), 900);
+
+  for(let i=0; i<35; i++){
+    const c = document.createElement("div");
+    c.className = "confetti";
+    c.style.left = Math.random() * 100 + "vw";
+    c.style.background = ["#facc15","#38bdf8","#fb7185","#a3e635","#ffffff"][Math.floor(Math.random()*5)];
+    c.style.animationDelay = Math.random() * .35 + "s";
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(), 2100);
+  }
+}
+
+updateCounter();
 </script>
 
 </body>
