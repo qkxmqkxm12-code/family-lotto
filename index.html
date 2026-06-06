@@ -38,29 +38,16 @@ body::before{
   opacity:.75;
 }
 
-body::after{
-  content:"";
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  background:
-    radial-gradient(circle at 50% 0%, rgba(255,255,255,.08), transparent 30%),
-    linear-gradient(120deg, transparent 0%, rgba(255,255,255,.06) 45%, transparent 70%);
-}
-
 .container{
   position:relative;
   z-index:1;
   max-width:660px;
   margin:0 auto;
-  background:rgba(10,15,25,.86);
+  background:rgba(10,15,25,.88);
   border:1px solid rgba(250,204,21,.28);
   border-radius:28px;
   padding:26px;
-  box-shadow:
-    0 30px 90px rgba(0,0,0,.58),
-    0 0 55px rgba(250,204,21,.15),
-    inset 0 1px 0 rgba(255,255,255,.08);
+  box-shadow:0 30px 90px rgba(0,0,0,.58),0 0 55px rgba(250,204,21,.15);
   backdrop-filter:blur(20px);
 }
 
@@ -71,17 +58,20 @@ body::after{
   margin-bottom:14px;
 }
 
-.logo-ball{
-  width:38px;
-  height:38px;
+.logo-ball,.number,.selected-mini{
   border-radius:50%;
   display:flex;
   align-items:center;
   justify-content:center;
   color:#111827;
   font-weight:900;
+  box-shadow:inset -6px -7px 9px rgba(0,0,0,.28),0 5px 14px rgba(0,0,0,.3);
+}
+
+.logo-ball{
+  width:40px;
+  height:40px;
   font-size:14px;
-  box-shadow:inset -5px -6px 8px rgba(0,0,0,.28),0 5px 14px rgba(0,0,0,.3);
 }
 
 h1{
@@ -109,14 +99,65 @@ p{
   color:#fde047;
 }
 
-.notice{
-  background:linear-gradient(135deg,rgba(2,6,23,.9),rgba(30,41,59,.74));
-  border:1px solid rgba(250,204,21,.22);
-  border-radius:20px;
-  padding:18px;
+.benefit-wrap{
   margin:20px 0;
-  line-height:1.8;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+}
+
+.benefit-title{
+  font-size:20px;
+  font-weight:900;
+  color:#fde047;
+  margin-bottom:12px;
+  text-align:center;
+}
+
+.benefit-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px;
+}
+
+.benefit-card{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  padding:13px 15px;
+  border-radius:18px;
+  background:linear-gradient(135deg,rgba(2,6,23,.95),rgba(30,41,59,.8));
+  border:1px solid rgba(250,204,21,.22);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 8px 20px rgba(0,0,0,.18);
+}
+
+.benefit-card strong{
+  color:#fde047;
+}
+
+.benefit-card span{
+  color:#fff;
+  font-weight:800;
+}
+
+.recent{
+  margin:18px 0;
+  padding:14px;
+  border-radius:18px;
+  background:rgba(15,23,42,.78);
+  border:1px solid rgba(255,255,255,.1);
+}
+
+.recent-title{
+  font-weight:900;
+  color:#93c5fd;
+  margin-bottom:8px;
+}
+
+.recent-list{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  color:#e5e7eb;
+  font-size:14px;
 }
 
 input{
@@ -134,25 +175,36 @@ input{
 .grid{
   display:grid;
   grid-template-columns:repeat(5,1fr);
-  gap:10px;
+  gap:12px;
   margin-top:14px;
+  justify-items:center;
 }
 
 .number{
-  padding:13px 0;
-  text-align:center;
-  border-radius:999px;
+  width:54px;
+  height:54px;
   cursor:pointer;
-  font-weight:900;
+  font-size:16px;
   user-select:none;
-  transition:.15s;
-  color:#111827;
-  box-shadow:inset -4px -5px 7px rgba(0,0,0,.22),0 4px 10px rgba(0,0,0,.18);
-  border:2px solid rgba(255,255,255,.28);
+  transition:.18s cubic-bezier(.2,.9,.2,1.4);
+  border:2px solid rgba(255,255,255,.35);
 }
 
 .number:hover{
-  transform:translateY(-1px) scale(1.03);
+  transform:translateY(-3px) scale(1.05);
+}
+
+.selected{
+  outline:4px solid #fff;
+  transform:translateY(-8px) scale(1.12);
+  animation:bounceBall .35s ease;
+  box-shadow:0 0 0 5px rgba(250,204,21,.45),0 14px 30px rgba(250,204,21,.35);
+}
+
+@keyframes bounceBall{
+  0%{transform:translateY(0) scale(1)}
+  55%{transform:translateY(-12px) scale(1.14)}
+  100%{transform:translateY(-8px) scale(1.12)}
 }
 
 .yellow{background:#fbc400}
@@ -161,17 +213,19 @@ input{
 .gray{background:#b7b7b7}
 .green{background:#b0d840}
 
-.selected{
-  outline:4px solid #fff;
-  transform:scale(1.08);
-  box-shadow:0 0 0 4px rgba(250,204,21,.45),0 10px 26px rgba(250,204,21,.35);
-}
-
 .selected-box{
   margin:14px 0;
-  color:#facc15;
-  font-weight:bold;
-  min-height:22px;
+  min-height:48px;
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+
+.selected-mini{
+  width:38px;
+  height:38px;
+  font-size:13px;
 }
 
 button{
@@ -232,10 +286,7 @@ button:disabled{
 }
 
 @keyframes fall{
-  to{
-    transform:translateY(110vh) rotate(720deg);
-    opacity:0;
-  }
+  to{transform:translateY(110vh) rotate(720deg);opacity:0}
 }
 
 .small{
@@ -246,21 +297,11 @@ button:disabled{
 
 @media(max-width:520px){
   body{padding:10px}
-
-  body::before{
-    font-size:42px;
-    letter-spacing:6px;
-    transform:rotate(-18deg) scale(1.15);
-  }
-
-  .container{
-    padding:18px;
-    border-radius:20px;
-  }
-
+  body::before{font-size:42px;letter-spacing:6px;transform:rotate(-18deg) scale(1.15)}
+  .container{padding:18px;border-radius:20px}
   h1{font-size:25px}
-  .grid{gap:8px}
-  .number{font-size:14px;padding:11px 0}
+  .grid{gap:9px}
+  .number{width:48px;height:48px;font-size:14px}
 }
 </style>
 </head>
@@ -281,13 +322,20 @@ button:disabled{
 
   <div class="counter" id="counter">남은 참여자 수 확인 중...</div>
 
-  <div class="notice">
-    🎁 당첨 혜택<br><br>
-    2개 적중 : 가족방 포인트 1만원<br>
-    3개 적중 : 커피 기프티콘<br>
-    4개 적중 : 치킨 기프티콘<br>
-    5개 적중 : 배민 상품권 3만원<br>
-    6개 적중 : 신세계 상품권 10만원
+  <div class="benefit-wrap">
+    <div class="benefit-title">🎁 당첨 혜택</div>
+    <div class="benefit-grid">
+      <div class="benefit-card"><strong>2개 적중</strong><span>가족방 포인트 1만원</span></div>
+      <div class="benefit-card"><strong>3개 적중</strong><span>커피 기프티콘</span></div>
+      <div class="benefit-card"><strong>4개 적중</strong><span>치킨 기프티콘</span></div>
+      <div class="benefit-card"><strong>5개 적중</strong><span>배민 상품권 3만원</span></div>
+      <div class="benefit-card"><strong>6개 적중</strong><span>신세계 상품권 10만원</span></div>
+    </div>
+  </div>
+
+  <div class="recent">
+    <div class="recent-title">최근 참여자</div>
+    <div class="recent-list" id="recentList">최근 참여자를 불러오는 중...</div>
   </div>
 
   <input type="text" id="nickname" placeholder="닉네임 입력">
@@ -311,6 +359,8 @@ import {
   getDocs,
   query,
   where,
+  orderBy,
+  limit,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
@@ -335,6 +385,7 @@ const message = document.getElementById("message");
 const counter = document.getElementById("counter");
 const submitBtn = document.getElementById("submitBtn");
 const container = document.getElementById("container");
+const recentList = document.getElementById("recentList");
 
 function numberClass(num){
   if(num <= 10) return "yellow";
@@ -342,6 +393,28 @@ function numberClass(num){
   if(num <= 30) return "red";
   if(num <= 40) return "gray";
   return "green";
+}
+
+function maskName(name){
+  if(!name) return "*";
+  if(name.length === 1) return name + "*";
+  if(name.length === 2) return name[0] + "*";
+  return name[0] + "*".repeat(name.length - 2) + name[name.length - 1];
+}
+
+function renderSelected(){
+  if(!selected.length){
+    selectedText.innerHTML = "없음";
+    return;
+  }
+
+  selectedText.innerHTML = "";
+  selected.forEach(num=>{
+    const b = document.createElement("div");
+    b.className = "selected-mini " + numberClass(num);
+    b.innerText = num;
+    selectedText.appendChild(b);
+  });
 }
 
 async function updateCounter(){
@@ -358,6 +431,28 @@ async function updateCounter(){
     }
   }catch(error){
     counter.innerText = "남은 참여자 수를 불러오는 중 오류가 발생했습니다.";
+  }
+}
+
+async function updateRecent(){
+  try{
+    const q = query(collection(db, "entries"), orderBy("createdAt", "desc"), limit(5));
+    const snap = await getDocs(q);
+
+    if(snap.empty){
+      recentList.innerText = "아직 참여자가 없습니다.";
+      return;
+    }
+
+    recentList.innerHTML = "";
+    snap.forEach(doc=>{
+      const data = doc.data();
+      const div = document.createElement("div");
+      div.innerText = "• " + maskName(data.nickname) + "님 참여 완료";
+      recentList.appendChild(div);
+    });
+  }catch(error){
+    recentList.innerText = "최근 참여자를 불러오는 중입니다.";
   }
 }
 
@@ -380,7 +475,7 @@ for(let i=1; i<=45; i++){
     }
 
     selected.sort((a,b)=>a-b);
-    selectedText.innerText = selected.length ? selected.join(", ") : "없음";
+    renderSelected();
   };
 
   grid.appendChild(div);
@@ -433,6 +528,7 @@ window.submitLotto = async function(){
 
     successEffect();
     await updateCounter();
+    await updateRecent();
 
     submitBtn.disabled = true;
     submitBtn.innerText = "참여 완료";
@@ -464,6 +560,7 @@ function successEffect(){
 }
 
 updateCounter();
+updateRecent();
 </script>
 
 </body>
